@@ -1,0 +1,23 @@
+{
+  "name": "express-authz",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/build-security/express-authz.git"
+  },
+  "author": "Amir Ben Nun",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/build-security/express-authz/issues"
+  },
+  "homepage": "https://github.com/build-security/express-authz#readme",
+  "dependencies": {
+    "node-fetch": "^2.6.1",
+    "underscore": "^1.11.0"
+  }
+}
