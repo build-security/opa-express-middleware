@@ -10,6 +10,7 @@
         "ecmaVersion": 12
     },
     "rules": {
+        "max-len": ["error", {"code": 120}],
         "semi": [2, "always"],
         "indent": ["error", 4]
     }
