@@ -5,7 +5,7 @@ const extAuthz = require('opa-express-middleware');
 const app = express();
 const jsonParserMiddleware = bodyParser.json();
 const extAuthzMiddleware = extAuthz((req) => ({
-    authzServer: 'http://localhost:8181/v1/data/amir',
+    authzServer: 'http://localhost:8181/v1/data/authz',
     filter: req.method === 'GET',
     enrich: {serviceId: 1},
 }));
