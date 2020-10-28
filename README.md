@@ -38,6 +38,44 @@ const extAuthzMiddleware = extAuthz((req) => ({
     enrich: { serviceId: 1 }
 }));
 app.use(jsonParserMiddleware, extAuthzMiddleware);
-```  
-	
+```
 
+### OPA Request example
+```
+{
+  input: {
+    request: {
+      method: "GET",
+      query: {
+        querykey: "queryvalue",
+      },
+      path: "/some/path",
+      scheme: "http",
+      host: "localhost",
+      body: {
+        bodykey: "bodyvalue",
+      },
+      headers: {
+        "content-type": "application/json",
+        "user-agent": "PostmanRuntime/7.26.5",
+        accept: "*/*",
+        "cache-control": "no-cache",
+        "postman-token": "1b119cb6-4db4-4edd-a56d-2065d5454750",
+        host: "localhost:3000",
+        "accept-encoding": "gzip, deflate, br",
+        connection: "keep-alive",
+        "content-length": "24",
+      },
+    },
+    source: {
+      port: 63405,
+      address: "::1",
+    },
+    destination: {
+      port: 3000,
+      address: "::1",
+    },
+    serviceId: 1,
+  },
+}
+```
