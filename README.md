@@ -10,6 +10,7 @@ If you're not familiar with OPA, please [learn more](https://www.openpolicyagent
 ## Usage
 ### Simple usage
 ```js
+const extAuthz = require('opa-express-middleware');
 const app = express();
 const extAuthzMiddleware = extAuthz((req) => ({
     authzServer: "http://localhost:8181/v1/data/authz",
@@ -31,6 +32,7 @@ app.use(jsonParserMiddleware, extAuthzMiddleware);
 ### Advanced example
 The following example will consult with the policy engine only for GET requests, and will add a field named "serviceId" with the value 1 to the request.
 ```js
+const extAuthz = require('opa-express-middleware');
 const app = express();
 const extAuthzMiddleware = extAuthz((req) => ({
     authzServer: "http://localhost:8181/v1/data/authz",
