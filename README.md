@@ -11,12 +11,21 @@ If you're not familiar with OPA, please [learn more](https://www.openpolicyagent
 ### Simple usage
 ```js
 const express = require('express');
+const bodyParser = require('body-parser');
 const extAuthz = require('opa-express-middleware');
+const port = 3000;
+
 const app = express();
+
 const extAuthzMiddleware = extAuthz((req) => ({
     authzServer: "http://localhost:8181/v1/data/authz",
 }));
-app.use(jsonParserMiddleware, extAuthzMiddleware);
+
+app.use(bodyParser.json(), extAuthzMiddleware);
+
+app.listen(port, () => {
+  console.log(`Now listening on http://localhost:${port}`)
+});
 ```
 ### Mandatory configuration
 
@@ -34,52 +43,55 @@ app.use(jsonParserMiddleware, extAuthzMiddleware);
 The following example will consult with the policy engine only for GET requests, and will add a field named "serviceId" with the value 1 to the request.
 ```js
 const express = require('express');
+const bodyParser = require('body-parser');
 const extAuthz = require('opa-express-middleware');
+
 const app = express();
+
 const extAuthzMiddleware = extAuthz((req) => ({
     authzServer: "http://localhost:8181/v1/data/authz",
     filter: req.method === "GET",
     enrich: { serviceId: 1 }
 }));
-app.use(jsonParserMiddleware, extAuthzMiddleware);
+
+app.use(bodyParser.json(), extAuthzMiddleware);
 ```
 
 ### OPA Request example
 ```
 {
-  input: {
-    request: {
-      method: "GET",
-      query: {
-        querykey: "queryvalue",
-      },
-      path: "/some/path",
-      scheme: "http",
-      host: "localhost",
-      body: {
-        bodykey: "bodyvalue",
-      },
-      headers: {
-        "content-type": "application/json",
-        "user-agent": "PostmanRuntime/7.26.5",
-        accept: "*/*",
-        "cache-control": "no-cache",
-        "postman-token": "1b119cb6-4db4-4edd-a56d-2065d5454750",
-        host: "localhost:3000",
-        "accept-encoding": "gzip, deflate, br",
-        connection: "keep-alive",
-        "content-length": "24",
-      },
-    },
-    source: {
-      port: 63405,
-      address: "::1",
-    },
-    destination: {
-      port: 3000,
-      address: "::1",
-    },
-    serviceId: 1,
-  },
+    "input": {
+        "request": {
+            "method": "GET",
+            "query": {
+                "querykey": "queryvalue"
+            },
+            "path": "/some/path",
+            "scheme": "http",
+            "host": "localhost",
+            "body": {
+                "bodykey": "bodyvalue"
+            },
+            "headers": {
+                "content-type": "application/json",
+                "user-agent": "PostmanRuntime/7.26.5",
+                "accept": "*/*",
+                "cache-control": "no-cache",
+                "host": "localhost:3000",
+                "accept-encoding": "gzip, deflate, br",
+                "connection": "keep-alive",
+                "content-length": "24"
+            }
+        },
+        "source": {
+            "port": 63405,
+            "address": "::1"
+        },
+        "destination": {
+            "port": 3000,
+            "address": "::1"
+        },
+        "serviceId": 1
+    }
 }
 ```
