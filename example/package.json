@@ -10,6 +10,6 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
-    "opa-express-middleware": "file:../"
+    "@build-security/opa-express-middleware": "^0.0.1"
   }
 }

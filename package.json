@@ -1,13 +1,13 @@
 {
-  "name": "opa-express-middleware",
-  "version": "1.0.0",
-  "description": "",
+  "name": "@build-security/opa-express-middleware",
+  "version": "0.0.1",
+  "description": "Node.js express middleware to authorize API requests using a 3rd party policy engine (OPA). If you're not familiar with OPA, please [learn more](https://www.openpolicyagent.org/).",
   "main": "./lib/index.js",
   "scripts": {
     "test": "jest"
   },
   "author": "Amir Ben Nun",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "node-fetch": "^2.6.1"
   },
@@ -16,5 +16,24 @@
     "eslint-config-google": "^0.14.0",
     "express": "^4.17.1",
     "jest": "^26.6.1"
-  }
+  },
+  "directories": {
+    "example": "example",
+    "lib": "lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/build-security/opa-express-middleware.git"
+  },
+  "keywords": [
+    "opa",
+    "express",
+    "authorization",
+    "authz",
+    "middelware"
+  ],
+  "bugs": {
+    "url": "https://github.com/build-security/opa-express-middleware/issues"
+  },
+  "homepage": "https://github.com/build-security/opa-express-middleware#readme"
 }
