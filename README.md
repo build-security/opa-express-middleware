@@ -12,7 +12,7 @@ If you're not familiar with OPA, please [learn more](https://www.openpolicyagent
 ```js
 const express = require('express');
 const bodyParser = require('body-parser');
-const extAuthz = require('opa-express-middleware');
+const extAuthz = require('@build-security/opa-express-middleware');
 const port = 3000;
 
 const app = express();
@@ -44,7 +44,7 @@ The following example will consult with the policy engine only for GET requests,
 ```js
 const express = require('express');
 const bodyParser = require('body-parser');
-const extAuthz = require('opa-express-middleware');
+const extAuthz = require('@build-security/opa-express-middleware');
 
 const app = express();
 

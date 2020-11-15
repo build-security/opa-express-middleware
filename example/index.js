@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const extAuthz = require('opa-express-middleware');
+const extAuthz = require('@build-security/opa-express-middleware');
 
 const app = express();
 const jsonParserMiddleware = bodyParser.json();
