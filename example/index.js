@@ -5,13 +5,23 @@ const extAuthz = require('@build-security/opa-express-middleware');
 const app = express();
 const jsonParserMiddleware = bodyParser.json();
 const extAuthzMiddleware = extAuthz((req) => ({
-    authzServer: 'http://localhost:8181/v1/data/authz',
-    filter: req.method === 'GET',
+    port: 8181,
+    hostname: 'http://localhost',
+    policyPath: '/mypolicy/allow',
+
+    enable: req.method === 'GET',
     enrich: {serviceId: 1},
 }));
-app.use(jsonParserMiddleware, extAuthzMiddleware);
 
-app.all('/', (req, res) => {
+// Add the extAuthzMiddleware here to apply to all requests.
+// This has one drawback: route parameters will not be available
+// to the authz policy as input.
+app.use(jsonParserMiddleware);
+
+
+// Applying the middleware per route makes the route parameter userId
+// available to the authz policy as input.
+app.get('/users/:userId', extAuthzMiddleware, (req, res) => {
     res.send('allowed');
 });
 
