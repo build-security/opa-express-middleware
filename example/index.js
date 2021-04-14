@@ -7,8 +7,7 @@ const jsonParserMiddleware = bodyParser.json();
 const extAuthzMiddleware = extAuthz.authorize((req) => ({
     port: 8181,
     hostname: 'http://localhost',
-    // TODO: revert
-    policyPath: '/amir/authz/allow',
+    policyPath: '/mypolicy/allow',
 
     enable: req.method === 'GET',
     enrich: {serviceId: 1},
@@ -26,8 +25,7 @@ app.get('/region/:region/users/:userId', extAuthz.permissions(['user.read']), ex
     res.send('allowed');
 });
 
-// TODO: revert
-const port = 3001;
+const port = 3000;
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
 });
