@@ -48,6 +48,7 @@ The following example will:
 - consult with the policy engine only for GET requests
 - add a field named "serviceId" with the value 1 to the request
 - provide route parameters to the PDP as input. (For this to work, the middleware can't be applied globally using `app.use`)
+- an endpoint can declare the required permission the client needs in order to access it
 ```js
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -55,7 +56,7 @@ const extAuthz = require('@build-security/opa-express-middleware');
 
 const app = express();
 
-const extAuthzMiddleware = extAuthz((req) => ({
+const extAuthzMiddleware = extAuthz.authorize((req) => ({
     port: 8181,
     hostname: 'http://localhost',
     policyPath: '/mypolicy/allow',
@@ -65,7 +66,7 @@ const extAuthzMiddleware = extAuthz((req) => ({
 
 app.use(bodyParser.json());
 
-app.get('/books/:bookId', extAuthzMiddleware, (req, res) => {
+app.get('/region/:region/users/:userId', extAuthz.permissions('user.read'), extAuthzMiddleware, (req, res) => {
     res.send('allowed');
 });
 ```
@@ -109,8 +110,12 @@ This is what the input received by the PDP would look like.
         },
         "resources": {
             "attributes": {
-                "bookId": "some-id"
-            }
+                "region": "israel",
+                "userId": "buildsec"
+            },
+            "permissions": [
+                "user.read"
+            ]
         },
         "serviceId": 1
     }

@@ -4,10 +4,11 @@ const extAuthz = require('@build-security/opa-express-middleware');
 
 const app = express();
 const jsonParserMiddleware = bodyParser.json();
-const extAuthzMiddleware = extAuthz((req) => ({
+const extAuthzMiddleware = extAuthz.authorize((req) => ({
     port: 8181,
     hostname: 'http://localhost',
-    policyPath: '/mypolicy/allow',
+    // TODO: revert
+    policyPath: '/amir/authz/allow',
 
     enable: req.method === 'GET',
     enrich: {serviceId: 1},
@@ -21,11 +22,12 @@ app.use(jsonParserMiddleware);
 
 // Applying the middleware per route makes the route parameter userId
 // available to the authz policy as input.
-app.get('/users/:userId', extAuthzMiddleware, (req, res) => {
+app.get('/region/:region/users/:userId', extAuthz.permissions(['user.read']), extAuthzMiddleware, (req, res) => {
     res.send('allowed');
 });
 
-const port = 3000;
+// TODO: revert
+const port = 3001;
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
 });
