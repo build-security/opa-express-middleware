@@ -1,7 +1,7 @@
 
 # opa-express-middleware
 ## Abstract
-Node.js express middleware to authorize API requests using a 3rd party policy engine (OPA).
+Node.js express middleware to authorize API requests using a 3rd party policy engine (OPA) as the Policy Decision Point (PDP).
 If you're not familiar with OPA, please [learn more](https://www.openpolicyagent.org/).
 
 ## Data Flow
@@ -18,7 +18,9 @@ const port = 3000;
 const app = express();
 
 const extAuthzMiddleware = extAuthz((req) => ({
-    authzServer: "http://localhost:8181/v1/data/authz",
+    port: 8181,
+    hostname: 'http://localhost',
+    policyPath: '/mypolicy/allow',
 }));
 
 app.use(bodyParser.json(), extAuthzMiddleware);
@@ -29,18 +31,23 @@ app.listen(port, () => {
 ```
 ### Mandatory configuration
 
- 1. `authzServer`: The hostname of the OPA service and the path of the policy.
+ 1. `hostname`: The hostname of the Policy Decision Point (PDP)
+ 2. `port`: The port at which the OPA service is running
+ 3. `policyPath`: Full path to the policy (including the rule) that decides whether requests should be authorized
 
 ### Optional configuration
- 1. `allowOnFail`: Boolean. "Fail open" mechanism to allow access to the API in case the policy engine is not reachable. **Default is false**.
+ 1. `allowOnFailure`: Boolean. "Fail open" mechanism to allow access to the API in case the policy engine is not reachable. **Default is false**.
  2. `includeBody`: Boolean. Whether or not to pass the request body to the policy engine. **Default is true**.
  3. `includeHeaders`: Boolean. Whether or not to pass the request headers to the policy engine. **Default is true**
  4. `timeout`: Boolean. Amount of time to wait before request is abandoned and request is declared as failed. **Default is 1000ms**.
- 5. `filter`: Boolean. Whether or not to consult with the policy engine for the specific request. **Default is true**
+ 5. `enable`: Boolean. Whether or not to consult with the policy engine for the specific request. **Default is true**
  6. `enrich`: Object. An object to attach to the request that is being sent to the policy engine. **Default is an empty object {}**
 
 ### Advanced example
-The following example will consult with the policy engine only for GET requests, and will add a field named "serviceId" with the value 1 to the request.
+The following example will:
+- consult with the policy engine only for GET requests
+- add a field named "serviceId" with the value 1 to the request
+- provide route parameters to the PDP as input. (For this to work, the middleware can't be applied globally using `app.use`)
 ```js
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -49,15 +56,24 @@ const extAuthz = require('@build-security/opa-express-middleware');
 const app = express();
 
 const extAuthzMiddleware = extAuthz((req) => ({
-    authzServer: "http://localhost:8181/v1/data/authz",
-    filter: req.method === "GET",
+    port: 8181,
+    hostname: 'http://localhost',
+    policyPath: '/mypolicy/allow',
+    enable: req.method === "GET",
     enrich: { serviceId: 1 }
 }));
 
-app.use(bodyParser.json(), extAuthzMiddleware);
+app.use(bodyParser.json());
+
+app.get('/books/:bookId', extAuthzMiddleware, (req, res) => {
+    res.send('allowed');
+});
 ```
 
-### OPA Request example
+### PDP Request example
+
+This is what the input received by the PDP would look like.
+
 ```
 {
     "input": {
@@ -90,6 +106,11 @@ app.use(bodyParser.json(), extAuthzMiddleware);
         "destination": {
             "port": 3000,
             "address": "::1"
+        },
+        "resources": {
+            "attributes": {
+                "bookId": "some-id"
+            }
         },
         "serviceId": 1
     }

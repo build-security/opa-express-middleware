@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1",
-    "@build-security/opa-express-middleware": "^0.0.1"
+    "@build-security/opa-express-middleware": "file:..",
+    "express": "^4.17.1"
   }
 }
