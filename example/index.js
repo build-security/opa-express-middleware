@@ -21,7 +21,7 @@ app.use(jsonParserMiddleware);
 
 // Applying the middleware per route makes the route parameter userId
 // available to the authz policy as input.
-app.get('/region/:region/users/:userId', extAuthz.permissions(['user.read']), extAuthzMiddleware, (req, res) => {
+app.get('/region/:region/users/:userId', extAuthz.permissions('user.read'), extAuthzMiddleware, (req, res) => {
     res.send('allowed');
 });
 
