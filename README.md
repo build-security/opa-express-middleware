@@ -1,13 +1,26 @@
 
 # opa-express-middleware
 ## Abstract
-Node.js express middleware to authorize API requests using a 3rd party policy engine (OPA) as the Policy Decision Point (PDP).
+Opa-express-middleware is a Node.js express middleware meant for authorize API requests using a 3rd party policy engine (OPA) as the Policy Decision Point (PDP).
 If you're not familiar with OPA, please [learn more](https://www.openpolicyagent.org/).
 
 ## Data Flow
 ![enter image description here](https://github.com/build-security/opa-express-middleware/blob/main/Data%20flow.png)
 
 ## Usage
+
+### Prerequisites 
+- Finish our "onboarding" tutorial
+- Run a pdp instance
+
+---
+**Important note**
+
+In the following example we used our aws managed pdp instance to ease your first setup, but if you feel comfortable you are recommended to use your own pdp instance instead.
+In that case, don't forget to change the **hostname** and the **port** in your code.
+
+---
+
 ### Simple usage
 ```js
 const express = require('express');
@@ -20,7 +33,7 @@ const app = express();
 const extAuthzMiddleware = extAuthz((req) => ({
     port: 8181,
     hostname: 'http://localhost',
-    policyPath: '/mypolicy/allow',
+    policyPath: 'v1/data/authz',
 }));
 
 app.use(bodyParser.json(), extAuthzMiddleware);
