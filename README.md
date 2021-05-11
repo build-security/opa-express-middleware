@@ -1,7 +1,7 @@
 
 # opa-express-middleware
 ## Abstract
-Opa-express-middleware is a Node.js express middleware meant for authorize API requests using a 3rd party policy engine (OPA) as the Policy Decision Point (PDP).
+Opa-express-middleware is a Node.js express middleware meant for authorizing API requests using a 3rd party policy engine (OPA) as the Policy Decision Point (PDP).
 If you're not familiar with OPA, please [learn more](https://www.openpolicyagent.org/).
 
 ## Data Flow
