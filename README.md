@@ -83,7 +83,7 @@ This is what the input received by the PDP would look like.
             "query": {
                 "querykey": "queryvalue"
             },
-            "path": "/some/path",
+            "path": "/region/israel/users/buildsec",
             "scheme": "http",
             "host": "localhost",
             "body": {
