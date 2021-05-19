@@ -7,7 +7,7 @@ const jsonParserMiddleware = bodyParser.json();
 const extAuthzMiddleware = extAuthz.authorize((req) => ({
     port: 8181,
     hostname: 'http://localhost',
-    policyPath: '/mypolicy/allow',
+    policyPath: '/authz/allow',
 
     enable: req.method === 'GET',
     enrich: {serviceId: 1},
