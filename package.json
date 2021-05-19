@@ -4,7 +4,7 @@
   "description": "Node.js express middleware to authorize API requests using a 3rd party policy engine (OPA). If you're not familiar with OPA, please [learn more](https://www.openpolicyagent.org/).",
   "main": "./lib/index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest --collectCoverage"
   },
   "author": "Amir Ben Nun",
   "license": "MIT",
