@@ -98,7 +98,7 @@ This is what the input received by the PDP would look like.
          "query":{
             
          },
-         "path":"/region/1/users/2",
+         "path":"/region/israel/users/buildsec",
          "scheme":"http",
          "host":"localhost",
          "body":{
