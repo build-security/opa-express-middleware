@@ -4,7 +4,7 @@
 
 ## Abstract
 [build.security](https://docs.build.security/) provides simple development and management for your organization's authorization policy.
-opa-express-middleware is a Node.js express middleware intended for performing authorization requests against build.security PDP(Policy Decision Point)/[OPA](https://www.openpolicyagent.org/).
+opa-express-middleware is a Node.js Express middleware intended for performing authorization requests against build.security PDP(Policy Decision Point)/[OPA](https://www.openpolicyagent.org/).
 
 ## Data Flow
 <p align="center"> <img src="Data%20flow.png" alt="drawing" width="60%"/></p>
