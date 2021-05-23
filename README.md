@@ -1,13 +1,28 @@
 
 # opa-express-middleware
+<p align="center"><img src="Logo-build.png" class="center" alt="build-logo" width="30%"/></p>
+
 ## Abstract
-Node.js express middleware to authorize API requests using a 3rd party policy engine (OPA) as the Policy Decision Point (PDP).
-If you're not familiar with OPA, please [learn more](https://www.openpolicyagent.org/).
+[build.security](https://docs.build.security/) provides simple development and management for your organization's authorization policy.
+opa-express-middleware is a Node.js Express middleware intended for performing authorization requests against build.security PDP(Policy Decision Point)/[OPA](https://www.openpolicyagent.org/).
 
 ## Data Flow
-![enter image description here](https://github.com/build-security/opa-express-middleware/blob/main/Data%20flow.png)
+<p align="center"> <img src="Data%20flow.png" alt="drawing" width="60%"/></p>
 
 ## Usage
+
+Before you start we recommend completing the onboarding tutorial.
+
+---
+**Important note**
+
+To simplify the setup process, the following example uses a local [build.security PDP instance](https://docs.build.security/policy-decision-points-pdp/pdp-deployments/standalone-docker-1).
+If you are already familiar with how to run your PDP, You can also run a pdp on you environment (Dev/Prod, etc).
+
+In that case, don't forget to change the **hostname** and the **port** in your code.
+
+---
+
 ### Simple usage
 ```js
 const express = require('express');
@@ -17,11 +32,12 @@ const port = 3000;
 
 const app = express();
 
-const extAuthzMiddleware = extAuthz((req) => ({
+const extAuthzMiddleware = extAuthz.authorize((req) => ({
     port: 8181,
     hostname: 'http://localhost',
-    policyPath: '/mypolicy/allow',
+    policyPath: '/authz/allow',
 }));
+
 
 app.use(bodyParser.json(), extAuthzMiddleware);
 
@@ -30,7 +46,6 @@ app.listen(port, () => {
 });
 ```
 ### Mandatory configuration
-
  1. `hostname`: The hostname of the Policy Decision Point (PDP)
  2. `port`: The port at which the OPA service is running
  3. `policyPath`: Full path to the policy (including the rule) that decides whether requests should be authorized
@@ -39,7 +54,7 @@ app.listen(port, () => {
  1. `allowOnFailure`: Boolean. "Fail open" mechanism to allow access to the API in case the policy engine is not reachable. **Default is false**.
  2. `includeBody`: Boolean. Whether or not to pass the request body to the policy engine. **Default is true**.
  3. `includeHeaders`: Boolean. Whether or not to pass the request headers to the policy engine. **Default is true**
- 4. `timeout`: Boolean. Amount of time to wait before request is abandoned and request is declared as failed. **Default is 1000ms**.
+ 4. `timeout`: Integer. Amount of time to wait before request is abandoned and request is declared as failed. **Default is 1000ms**.
  5. `enable`: Boolean. Whether or not to consult with the policy engine for the specific request. **Default is true**
  6. `enrich`: Object. An object to attach to the request that is being sent to the policy engine. **Default is an empty object {}**
 
@@ -59,7 +74,7 @@ const app = express();
 const extAuthzMiddleware = extAuthz.authorize((req) => ({
     port: 8181,
     hostname: 'http://localhost',
-    policyPath: '/mypolicy/allow',
+    policyPath: '/authz/allow',
     enable: req.method === "GET",
     enrich: { serviceId: 1 }
 }));
@@ -77,47 +92,51 @@ This is what the input received by the PDP would look like.
 
 ```
 {
-    "input": {
-        "request": {
-            "method": "GET",
-            "query": {
-                "querykey": "queryvalue"
-            },
-            "path": "/region/israel/users/buildsec",
-            "scheme": "http",
-            "host": "localhost",
-            "body": {
-                "bodykey": "bodyvalue"
-            },
-            "headers": {
-                "content-type": "application/json",
-                "user-agent": "PostmanRuntime/7.26.5",
-                "accept": "*/*",
-                "cache-control": "no-cache",
-                "host": "localhost:3000",
-                "accept-encoding": "gzip, deflate, br",
-                "connection": "keep-alive",
-                "content-length": "24"
-            }
-        },
-        "source": {
-            "port": 63405,
-            "address": "::1"
-        },
-        "destination": {
-            "port": 3000,
-            "address": "::1"
-        },
-        "resources": {
-            "attributes": {
-                "region": "israel",
-                "userId": "buildsec"
-            },
-            "permissions": [
-                "user.read"
-            ]
-        },
-        "serviceId": 1
-    }
+   "input":{
+      "request":{
+         "method":"GET",
+         "query":{
+            
+         },
+         "path":"/region/israel/users/buildsec",
+         "scheme":"http",
+         "host":"localhost",
+         "body":{
+            
+         },
+         "headers":{
+            "host":"localhost:3000",
+            "user-agent":"curl/7.64.1",
+            "accept":"*/*"
+         }
+      },
+      "source":{
+         "port":56038,
+         "ipAddress":"::1"
+      },
+      "destination":{
+         "port":3000,
+         "ipAddress":"::1"
+      },
+      "resources":{
+         "attributes":{
+            "region":"1",
+            "userId":"2"
+         },
+         "permissions":[
+            "user.read"
+         ]
+      },
+      "serviceId":1
+   }
+}
+```
+
+If everything works well you should receive the following response:
+
+```
+{
+    "decision_id":"ef414180-05bd-4817-9634-7d1537d5a657",
+    "result":true
 }
 ```
